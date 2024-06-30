@@ -3,14 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pantry Tracker</title>
+  <title>Cook App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Welcome to Pantry Tracker</h1>
-  <a href="/auth/google">Login with Google</a>
-  <br>
-  <a href="/protected">Go to Protected Route</a>
-  <br>
-  <a href="/logout">Logout</a>
+  <div id="app">
+    <h1>Welcome to Cook App</h1>
+    <div id="auth-section">
+      <button id="login-btn">Login with Google</button>
+      <button id="logout-btn" style="display: none;">Logout</button>
+    </div>
+    <div id="content" style="display: none;">
+      <h2>Hello, <span id="user-email"></span></h2>
+      <div>
+        <h3>Recipes</h3>
+        <div id="recipes"></div>
+        <button id="load-recipes">Load Recipes</button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
 </body>
 </html>
