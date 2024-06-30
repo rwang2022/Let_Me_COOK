@@ -1,37 +1,45 @@
-import express from 'express';
-import session from 'express-session';
 import passport from 'passport';
-import bodyParser from 'body-parser';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import pool from './db';
 import dotenv from 'dotenv';
-import path from 'path';
-import './auth'; // Ensure this is imported so that passport strategies are registered
-import routes from './routes';
+import { log } from 'console';
+
+// Load environment variables from .env file
+
+console.log(process.env.GOOGLE_CLIENT_ID);
 
 dotenv.config();
 
-const app = express();
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  callbackURL: "/auth/google/callback"
+},
+async (token, tokenSecret, profile, done) => {
+  const email = profile.emails?.[0].value;
+  const name = profile.displayName;
+  const googleId = profile.id;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(session({
-  secret: process.env.SESSION_SECRET!,
-  resave: false,
-  saveUninitialized: true
+  try {
+    let user = await pool.query('SELECT * FROM users WHERE google_id = $1', [googleId]);
+    if (user.rowCount === 0) {
+      user = await pool.query('INSERT INTO users (name, email, google_id) VALUES ($1, $2, $3) RETURNING *', [name, email, googleId]);
+    }
+    done(null, user.rows[0]);
+  } catch (err) {
+    done(err);
+  }
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/api', routes);
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+passport.serializeUser((user: any, done) => {
+  done(null, user.id);
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    done(null, user.rows[0]);
+  } catch (err) {
+    done(err);
+  }
 });
