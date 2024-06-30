@@ -1,0 +1,23 @@
+kitchen=# SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_schema = 'public' ORDER BY table_name, ordinal_position;
+  table_name  |  column_name  |     data_type
+--------------+---------------+-------------------
+ ingredients  | id            | integer
+ ingredients  | name          | character varying
+ ingredients  | category      | character varying
+ ingredients  | allergens     | ARRAY
+ pantry       | user_id       | integer
+ pantry       | ingredient_id | integer
+ pantry       | quantity      | character varying
+ recipes      | id            | integer
+ recipes      | name          | character varying
+ recipes      | instructions  | text
+ recipes      | user_id       | integer
+ recipes      | quantity      | integer
+ shoppinglist | user_id       | integer
+ shoppinglist | ingredient_id | integer
+ shoppinglist | quantity      | character varying
+ users        | id            | integer
+ users        | name          | character varying
+ users        | email         | character varying
+ users        | google_id     | character varying
+(19 rows)

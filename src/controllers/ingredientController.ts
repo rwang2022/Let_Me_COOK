@@ -36,11 +36,11 @@ export const getIngredientById = async (req: Request, res: Response) => {
 
 // Create a new ingredient
 export const createIngredient = async (req: Request, res: Response) => {
-    const { name, category, allergens, nutrition_info } = req.body;
+    const { name, category, allergens} = req.body;
     try {
         const result = await pool.query(
-            'INSERT INTO ingredients (name, category, allergens, nutrition_info) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, category, allergens, nutrition_info]
+            'INSERT INTO ingredients (name, category, allergens) VALUES ($1, $2, $3) RETURNING *',
+            [name, category, allergens]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -51,11 +51,11 @@ export const createIngredient = async (req: Request, res: Response) => {
 // Update an ingredient
 export const updateIngredient = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, category, allergens, nutrition_info } = req.body;
+    const { name, category, allergens} = req.body;
     try {
         const result = await pool.query(
-            'UPDATE ingredients SET name = $1, category = $2, allergens = $3, nutrition_info = $4 WHERE id = $5 RETURNING *',
-            [name, category, allergens, nutrition_info, id]
+            'UPDATE ingredients SET name = $1, category = $2, allergens = $3 WHERE id = $4 RETURNING *',
+            [name, category, allergens, id]
         );
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Ingredient not found' });
