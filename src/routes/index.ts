@@ -14,8 +14,9 @@ import {
   deletePantryIngredient
 } from '../controllers/pantryController';
 import {
+  getRecipes,
+  getRecipeById,
   createRecipe,
-  getRecipe,
   updateRecipe,
   deleteRecipe
 } from '../controllers/recipesController';
@@ -51,7 +52,8 @@ router.put('/pantry', updatePantryIngredient);
 router.delete('/pantry', deletePantryIngredient);
 
 // Recipes Routes
-router.get('/recipes', getRecipe);
+router.get('/recipes', getRecipes);
+router.get('/recipes/:id', getRecipeById);
 router.post('/recipes', createRecipe);
 router.put('/recipes/:id', updateRecipe);
 router.delete('/recipes/:id', deleteRecipe);

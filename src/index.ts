@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 // import './auth'; // Ensure this is imported so that passport strategies are registered
-import routes from './routes/routes';
+import routes from './routes';
 
 console.log("Loading environment variables...");
 dotenv.config();
