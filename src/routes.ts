@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { isAuthenticated } from './auth';
 import { createUser, getUserByEmail, getUserById } from './models/user';
 import { createIngredient, getAllIngredients, getIngredientById } from './models/ingredient';
 import { createRecipe, addIngredientToRecipe, getRecipeById, getIngredientsForRecipe } from './models/recipe';
@@ -24,9 +23,6 @@ router.get('/logout', (req, res, next) => {
   });
 });
 
-router.get('/protected', isAuthenticated, (req, res) => {
-  res.send('This is a protected route.');
-});
 
 router.get('/login', (req, res) => {
   res.send('Please <a href="/auth/google">login with Google</a>.');
