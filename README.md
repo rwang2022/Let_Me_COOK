@@ -37,7 +37,7 @@ Follow these instructions to set up and run the project on your local machine.
     node -e "console.log(require('crypto').randomBytes(64).toString('hex'));"
     ``` 
 4. **Run the application**
-```plaintext
+```bash
 npx ts-node src/index.ts
 ```
 1. Open your browser and navigate to http://localhost:3000

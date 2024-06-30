@@ -1,45 +1,45 @@
+import express from 'express';
+import session from 'express-session';
 import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import pool from './db';
+import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { log } from 'console';
+import path from 'path';
+// import './auth'; // Ensure this is imported so that passport strategies are registered
+import routes from './routes';
 
-// Load environment variables from .env file
-
-console.log(process.env.GOOGLE_CLIENT_ID);
-
+console.log("Loading environment variables...");
 dotenv.config();
+console.log("Environment variables loaded.");
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID!,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-  callbackURL: "/auth/google/callback"
-},
-async (token, tokenSecret, profile, done) => {
-  const email = profile.emails?.[0].value;
-  const name = profile.displayName;
-  const googleId = profile.id;
+const app = express();
+console.log("Express app initialized.");
 
-  try {
-    let user = await pool.query('SELECT * FROM users WHERE google_id = $1', [googleId]);
-    if (user.rowCount === 0) {
-      user = await pool.query('INSERT INTO users (name, email, google_id) VALUES ($1, $2, $3) RETURNING *', [name, email, googleId]);
-    }
-    done(null, user.rows[0]);
-  } catch (err) {
-    done(err);
-  }
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: true
 }));
 
-passport.serializeUser((user: any, done) => {
-  done(null, user.id);
+app.use(passport.initialize());
+app.use(passport.session());
+
+console.log("Middlewares applied.");
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+console.log("Static files middleware applied.");
+
+app.use('/api', routes);
+
+app.get('/', (req, res) => {
+  console.log("Serving index.html");
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    done(null, user.rows[0]);
-  } catch (err) {
-    done(err);
-  }
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
