@@ -2,8 +2,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import pool from './db';
 
-console.log('GOOGLE_CLIENT_ID in auth:', process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_SECRET in auth:', process.env.GOOGLE_CLIENT_SECRET);
+// console.log('GOOGLE_CLIENT_ID in auth:', process.env.GOOGLE_CLIENT_ID);
+// console.log('GOOGLE_CLIENT_SECRET in auth:', process.env.GOOGLE_CLIENT_SECRET);
 
 
 passport.use(new GoogleStrategy({

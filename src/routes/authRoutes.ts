@@ -1,5 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import passport from 'passport';
+import ensureAuthenticated from '../middlewares/authMiddleware';
+import path from 'path';
 
 const router = Router();
 
@@ -12,7 +14,7 @@ router.get('/auth/google', passport.authenticate('google', {
 router.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req: Request, res: Response) => {
-    res.redirect('/');
+    res.redirect('/login');
   }
 );
 
@@ -24,6 +26,16 @@ router.get('/auth/logout', (req: Request, res: Response, next: NextFunction) => 
     }
     res.redirect('/');
   });
+});
+
+// Login page route
+router.get('/login', (req: Request, res: Response) => {
+  res.sendFile('login.html', { root: path.join(__dirname, '../public') });
+});
+
+// Home page route
+router.get('/', ensureAuthenticated, (req: Request, res: Response) => {
+  res.sendFile('index.html', { root: path.join(__dirname, '../public') });
 });
 
 export default router;
