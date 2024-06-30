@@ -23,20 +23,24 @@ Follow these instructions to set up and run the project on your local machine.
     ```bash
     npm install
     ```
-3. Create an .env file. Replace `your_google_client_id` and `your_google_client_secret` with the credentials you obtain from the Google Developer Console.
-Replace `pantry_user` and `mypassword` with your PostgreSQL username and password.
-Replace `your_generated_session_secret` with a secure random string. **See the Additional Details section at the bottom if you are having trouble.**
+3. Create an `.env` file. 
     ```
     GOOGLE_CLIENT_ID=your_google_client_id
     GOOGLE_CLIENT_SECRET=your_google_client_secret
     DATABASE_URL=postgres://pantry_user:mypassword@localhost:5432/pantry
     SESSION_SECRET=your_generated_session_secret
     ```
+   1. Replace `your_google_client_id` and `your_google_client_secret` with the credentials you obtain from the Google Developer Console. **See Additional Details.**
+    2. Replace `pantry_user` and `mypassword` with your PostgreSQL username and password. **See Additional Details.**
+    3. Use this command to generate secure random string and replace `your_generated_session_secret`
+    ```
+    node -e "console.log(require('crypto').randomBytes(64).toString('hex'));"
+    ``` 
 4. **Run the application**
 ```plaintext
 npx ts-node src/index.ts
 ```
-5. Open your browser and navigate to http://localhost:3000
+1. Open your browser and navigate to http://localhost:3000
 
 ### Usage
 No website functionality yet.
@@ -60,9 +64,4 @@ CREATE DATABASE pantry;
 CREATE USER pantry_user WITH PASSWORD 'mypassword';
 GRANT ALL PRIVILEGES ON DATABASE pantry TO pantry_user;
 ```   
-3. **Session Secret:**
-   - Generate a secure random string for `SESSION_SECRET`, e.g., using Node.js:
-     ```bash
-     node -e "console.log(require('crypto').randomBytes(64).toString('hex'));"
-     ```
 
