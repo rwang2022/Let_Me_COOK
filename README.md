@@ -65,3 +65,5 @@ CREATE USER pantry_user WITH PASSWORD 'mypassword';
 GRANT ALL PRIVILEGES ON DATABASE pantry TO pantry_user;
 ```   
 
+## Project ideas for later
+1. `ingredients` should also have a `price` column (could be populated by current prices, either user-given or from an API)
